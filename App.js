@@ -5,7 +5,12 @@ import Props from '/Users/hidayatrehmat/Desktop/javascript/Project123/Props.js'
 import Textinput from './Textinput'
 import Stopwatch from './Stopwatch'
 import Form from './Form'
-
+import New20FEB,{New20FEB3,New21} from './New20FEB'
+import Child from './Child'
+import Hook1 from './Hook'
+import Form_task from './Form_task'
+import Task_f from './Task_f';
+import Lifecycle from './Lifecycle';
 export class App1 extends Component {
   render() {
     return (
@@ -100,7 +105,12 @@ class App extends Component {
         <Demo name="kaur" />
     <Textinput/>*/}
         {/* <Stopwatch/> */}
-        <Form/>
+        {/* <Form/> */}
+         {/* <New20FEB3/>
+        <New21/> */}
+        {/* <Hook1/> */}
+        {/* <Form_task/> */}
+        <Lifecycle/>
       </SafeAreaView>
     );
   }

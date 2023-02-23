@@ -12,21 +12,21 @@ export class Stopwatch extends Component {
   }
   start = () => {
     if (this.state) {
-        this.interval = setInterval(() => {
-             if (this.state.sec !== 59) {
-                this.setState({
-                    sec: ++this.state.sec
-                });
-            } else {
-                this.setState({
-                    sec: 0,
-                    minute: ++this.state.minute
-                });
-            }
-        }, 1000);
+      this.interval = setInterval(() => {
+        if (this.state.sec !== 59) {
+          this.setState({
+            sec: ++this.state.sec
+          });
+        } else {
+          this.setState({
+            sec: 0,
+            minute: ++this.state.minute
+          });
+        }
+      }, 1000);
 
     } else {
-        clearInterval(this.interval);
+      clearInterval(this.interval);
     }
   };
   reset = () => {
@@ -34,7 +34,7 @@ export class Stopwatch extends Component {
       minute: 0,
       sec: 0,
       hour: 0,
-     
+
     });
     clearInterval(this.interval);
   }
@@ -46,15 +46,15 @@ export class Stopwatch extends Component {
     });
     clearInterval(this.interval);
   }
-  
-  
+
+
   render() {
     return (
       <View>
         <Text style={{ alignItems: 'center' }}> {this.state.hour}:{this.state.minute}:{this.state.sec}</Text>
         <Button title="start" onPress={this.start.bind(this)} />
         <Button title="reset" onPress={this.reset.bind(this)} />
-        <Button title="pause" onPress={this.pause.bind(this)}/>
+        <Button title="pause" onPress={this.pause.bind(this)} />
       </View>
     )
   }
