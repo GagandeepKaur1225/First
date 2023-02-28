@@ -1,0 +1,15 @@
+export const CONSTANTS = {
+    EMAIL: "Email",
+    EMAIL_PLACEHOLDER: "Enter email here",
+    PASSWORD: "Password",
+    PASSWORD_PLACEHOLDER: "Enter password",
+    NAME: "Name",
+    NAME_HOLDER: "Enter name",
+    STATE: "State",
+    STATE_HOLDER: "ENter state",
+    CITY: "City",
+    CITY_HOLDER: "Enter city",
+    CONFIRM_PASSWORD: "Confirm Password",
+    CONFIRM_HOLDER: "Confirm the password",
+    PASSWORD_CHECK: "/(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/",
+}
