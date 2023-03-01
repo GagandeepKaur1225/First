@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { View, Text, TextInput, StyleSheet, Button } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { CONSTANTS } from './shared/constants'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 const SignupPage = ({ navigation }) => {
     const [email, setEmail] = useState('');
@@ -62,21 +63,25 @@ const SignupPage = ({ navigation }) => {
         const storeUser = async () => {
             try {
                 const jsonValue1 = await AsyncStorage.getItem('email')
-                const value = JSON.parse(jsonValue1)
-                setVal(JSON.parse(jsonValue1))
-                console.log(jsonValue1, typeof jsonValue1,"json value");
-                const emailData = {...value,dataToStore}
-                 await AsyncStorage.setItem('email', JSON.stringify(emailData))
+                let changed
+                if (jsonValue1) {
+                    changed = JSON.parse(jsonValue1)
+                    console.log(changed,"printing change")
+                    changed.push(dataToStore)
+                }
+                else {
+                    changed=[dataToStore]
+                    
+                }
+                 await AsyncStorage.setItem('email', JSON.stringify(changed))
                 console.log("try1")
                 const temp = await AsyncStorage.getItem('email')
                 console.log(temp,"email fields")
-                // console.log(jsonValue)
+               
             }
             catch (error) {
                 console.log(error,"error this error");
             }
-            // console.log(storeUser);
-            // console.log('@user');
         }
         console.log(storeUser());
         console.log("submit pressed");
@@ -119,15 +124,14 @@ const SignupPage = ({ navigation }) => {
         },
     ]
     let dataToStore = {
-        [email]: {
             nameKey: nameVal,
             emailKey: email,
             stateKey: stateVal,
             cityKey: city,
             passwordKey: pass
-        }
     }
-    return (
+   
+    return (<SafeAreaView>
         <View style={style.mainView}>
             <Text>SIGNUP PAGE</Text>
             <Text></Text>
@@ -149,6 +153,7 @@ const SignupPage = ({ navigation }) => {
             >
             </Button>
         </View>
+        </SafeAreaView>
     )
 }
 
@@ -165,8 +170,8 @@ const style = StyleSheet.create(
         textInputStyle: {
             borderWidth: 2,
             fontSize: 15,
-            padding: 10
-
+            padding: 10, 
+           borderRadius:5
         },
         buttonStyle: {
             padding: 20,

@@ -7,6 +7,9 @@ import Cust_but from './Cust_but';
 import Custom_in from './Custom_in';
 import Cust_view from './Cust_view';
 import Custom_opac from './Custom_opac'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { SafeAreaView } from 'react-native-safe-area-context';
+
 class Form_task extends Component {
     constructor(props) {
         super(props);
@@ -18,12 +21,9 @@ class Form_task extends Component {
             emailErr: '',
             pass: ' ',
             passErr: '',
-            focus:false,
+            focus: false,
+            dataRetrieved:''
         }
-    }
-    onSubmit = () => {
-        this.props.navigation.navigate('ThirdScreen');
-        
     }
     showpass = () => {
         // console.log("hello");
@@ -62,26 +62,59 @@ class Form_task extends Component {
         alert('alert');
         
     }
-     getData = async () => {
+    getData = async () => {
         try {
-            console.log("inside try");
-            const jsonValue = await AsyncStorage.getItem('@user')
-            //     .then((res) => {
-            //     console.log(res,"res is this")
-            // });
-            console.log(jsonValue,"out side val");
+            console.log("inside try form task");
+            const jsonValue=await AsyncStorage.getItem('email')
+            console.log(jsonValue, "out side val");
+            this.setState({ dataRetrieved: jsonValue });
+            console.log(this.state.dataRetrieved);
+            await AsyncStorage.setItem('loginState', JSON.stringify(true));
+            return jsonValue != null ? JSON.parse(jsonValue) : null;
         } catch(e) {
             console.log("error");
         }
-        //  return jsonValue != null ? JSON.parse(jsonValue) : null;
-      }
-    componentDidMount() {
+    }
+    onSubmit = () => {
+        
         this.getData();
+        console.log(this.state.dataRetrieved, "showing you the data retrieved");
+        const stateRetrieved = this.state.dataRetrieved;
+        const parseArr=JSON.parse(stateRetrieved)
+        console.log(stateRetrieved,parseArr,"STATE IS");
+        const filterApplied = parseArr.filter((value)=>{
+            if ((value.emailKey == this.state.email )&& (value.passwordKey == this.state.pass) ) {
+                console.log("matched email and psssword");
+                this.props.navigation.navigate('ThirdScreen');
+                return value;
+            }
+          
+        });
+        if (filterApplied.length==0) {
+            console.log(filterApplied,filterApplied.length,"checking alert");
+            alert('you need to sign up first');
+            // this.props.navigation.navigate('Screen_for_signup');
+        }
+        // console.log(filterApplied);
+    }
+    componentWillMount() {
+        console.log("HELLOOO");
+        (async () => {
+            userLoggedIn = await AsyncStorage.getItem('loginState');
+            const data=JSON.parse(userLoggedIn)
+            if (data) {
+                this.props.navigation.navigate('ThirdScreen');
+            }
+        })()
+        this.getData();
+    }
+    componentWillUnmount() {
+        console.log("unmounted");
     }
     render() {
         console.log(this.state.email);
         return (
-            <View style={{ marginHorizontal: 40 }}>
+            <SafeAreaView style={{ marginHorizontal: 40 }}>
                 <TouchableOpacity onPress={this.alert_touchable.bind(this)}  style={{
                     display: 'flex',
                     flexDirection: 'row',
@@ -129,11 +162,6 @@ class Form_task extends Component {
                       <View><Text style={{ color: "red" }}>
                     {this.state.passErr}
                 </Text></View>
-                <View>
-                    <TouchableOpacity style={{right:13}} onPress={()=>alert("signup")}>
-                        <Text style={style1.signupText} onPress={() => navi}>signup</Text>
-                    </TouchableOpacity>
-                </View>
                 <View> 
                     <Cust_but name="LOGIN"  onPress={() =>this.onSubmit()}></Cust_but>
                     <Text style={{
@@ -144,7 +172,7 @@ class Form_task extends Component {
                     <Cust_but   src={require('./assets/logo_g.png')} name="Google" backgroundColor='#00008B' onPress={this.onSubmit.bind(this)}></Cust_but>
                     <Cust_but backgroundColor="" src={require('./assets/logo_t.jpeg')} name="Twitter" backgroundColor='#00008B'></Cust_but>
                 </View>
-            </View>
+            </SafeAreaView>
         )
     }
 }
@@ -156,7 +184,8 @@ const style1 = StyleSheet.create({
         borderWidth: 2,
         borderRadius: 8,
         marginBottom: 20,
-        marginTop: 10
+        marginTop: 10,
+        
         
     },
     view2:{
@@ -164,6 +193,7 @@ const style1 = StyleSheet.create({
         marginBottom: 20,
         marginTop: 10, height: 38,
         flexDirection: 'row',
+        
         justifyContent: "space-between"
     },
     signupText: {
@@ -187,13 +217,18 @@ style={{ height: 20, width: 30 }}></CheckBox>
 // var v1 = this.state.email;
 // var v2=this.state.pass
 // if (v1 === ""|| v2==="") {
-//     Alert.alert(
-//         'enter the right and full details'
-//     );
-// }else {
-//     Alert.alert(
-//         this.state.email, this.state.pass,
-//         'message'
-//     );
-// }
-    
+    //     Alert.alert(
+        //         'enter the right and full details'
+        //     );
+        // }else {
+            //     Alert.alert(
+                //         this.state.email, this.state.pass,
+                //         'message'
+                //     );
+                // }
+                
+                {/* <View>
+                    <TouchableOpacity style={{right:13}} onPress={()=>alert("signup")}>
+                        <Text style={style1.signupText} onPress={() => navi}>signup</Text>
+                    </TouchableOpacity>
+                </View> */}
